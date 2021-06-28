@@ -2,6 +2,8 @@ package core
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import promotion.QuantityPromotion
+import types.Order
 import types.SKUItem
 import kotlin.test.assertEquals
 
@@ -12,8 +14,17 @@ internal class PromotionEngineTest {
     private val c = SKUItem("C", 20)
     private val d = SKUItem("D", 15)
 
+    private val A3Promotion = QuantityPromotion(a, 3, 130)
+    private val B2promotion = QuantityPromotion(b, 2, 45)
+    private val DStupidPromotion = QuantityPromotion(b, 2, 145)
+
+    private val promotionEngine = PromotionEngine()
+
+
     @BeforeEach
     fun setUp() {
+        promotionEngine.addPromotion(A3Promotion)
+        promotionEngine.addPromotion(B2promotion)
     }
 
     @Test
