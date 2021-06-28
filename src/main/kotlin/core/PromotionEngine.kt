@@ -2,6 +2,7 @@ package core
 
 import promotion.Promotion
 import types.Order
+import java.lang.Integer.min
 
 class PromotionEngine {
     private var promotions : MutableList<Promotion> = mutableListOf()
@@ -23,6 +24,14 @@ class PromotionEngine {
 
     private fun findLowestPrice(order: Order, cost: Int):Int {
         var price = calcOrderPriceWithoutPromotions(order) + cost
+
+        for (promotion in promotions) {
+            if (promotion.isApplicable(order)) {
+                val pair = promotion.applyPromotion(order)
+                price = min(price, findLowestPrice(pair.second, cost + pair.first))
+            }
+        }
+
         return price
     }
 
