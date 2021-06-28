@@ -2,6 +2,7 @@ package core
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import promotion.CouplePromotion
 import promotion.QuantityPromotion
 import types.Order
 import types.SKUItem
@@ -16,6 +17,7 @@ internal class PromotionEngineTest {
 
     private val A3Promotion = QuantityPromotion(a, 3, 130)
     private val B2promotion = QuantityPromotion(b, 2, 45)
+    private val CDPromotion = CouplePromotion(c, d, 30)
     private val DStupidPromotion = QuantityPromotion(b, 2, 145)
 
     private val promotionEngine = PromotionEngine()
@@ -25,6 +27,7 @@ internal class PromotionEngineTest {
     fun setUp() {
         promotionEngine.addPromotion(A3Promotion)
         promotionEngine.addPromotion(B2promotion)
+        promotionEngine.addPromotion(CDPromotion)
     }
 
     @Test
@@ -86,4 +89,23 @@ internal class PromotionEngineTest {
         assertEquals(promotionEngine.calculateOrderPrice(order), 280)
     }
 
+    @Test
+    fun stupidPromotionTest() {
+        val order = Order(mutableMapOf(d to 5))
+        promotionEngine.removePromotion(A3Promotion)
+        promotionEngine.removePromotion(B2promotion)
+        promotionEngine.removePromotion(CDPromotion)
+        promotionEngine.addPromotion(DStupidPromotion)
+
+        assertEquals(promotionEngine.calculateOrderPrice(order), 75)
+    }
+    @Test
+    fun removeAllPromotions() {
+        val order = Order(mutableMapOf(a to 3,b to 1, c to 1, d to 1))
+        promotionEngine.removePromotion(A3Promotion)
+        promotionEngine.removePromotion(B2promotion)
+        promotionEngine.removePromotion(CDPromotion)
+
+        assertEquals(promotionEngine.calculateOrderPrice(order), 215)
+    }
 }
